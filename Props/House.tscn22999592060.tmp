@@ -1,0 +1,105 @@
+[gd_scene load_steps=6 format=3 uid="uid://dgha8wj66eaxb"]
+
+[ext_resource type="Texture2D" uid="uid://ck3smpst1yoph" path="res://Assets/House.png" id="1_tfsl5"]
+[ext_resource type="PackedScene" uid="uid://dlp7evrya1r3f" path="res://Support/Interactive.tscn" id="2_3dtfm"]
+[ext_resource type="Script" uid="uid://d2xqym5n6hlqn" path="res://addons/2d_shapes/shapes/Ellipse.gd" id="2_vjsyv"]
+
+[sub_resource type="GDScript" id="GDScript_u12v5"]
+script/source = "extends Node2D
+class_name House2
+
+@export var population_increment := 20 
+
+@export var player := Color.WHITE
+
+var population := 0
+var energy := 1.0
+
+var interactive := false
+
+signal unreachable(body: Node2D)
+signal action()
+
+func _ready() -> void:
+	$Indicator.color = player
+	$Label.text = str(population)
+	$Reach/Area/Collision.polygon = $Reach/Shape.polygon
+	
+func energize(amount: float):
+	energy += amount
+	
+func take(amount: int) -> int:
+	var value = amount
+	if value > population:
+		value = population
+	population -= value
+	return value
+	
+func show_reach(val=true) -> void:
+	$Reach.visible = val
+
+func _on_reach_exited(body: Node2D) -> void:
+	if $Reach.visible:
+		unreachable.emit(body)
+
+func _on_nextround():
+	population += population_increment * energy
+	$Label.text = str(population)
+
+func _on_interactive_mouse_entered() -> void:
+	if World.player_turn == player:
+		interactive = true
+
+func _on_interactive_mouse_exited() -> void:
+	interactive = false
+	
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed(\"action\") and interactive:
+		action.emit()
+"
+
+[sub_resource type="LabelSettings" id="LabelSettings_jst5x"]
+font_size = 10
+font_color = Color(0, 0, 0, 1)
+shadow_size = 0
+
+[node name="House" type="Node2D"]
+texture_filter = 1
+script = SubResource("GDScript_u12v5")
+
+[node name="Reach" type="Node2D" parent="."]
+visible = false
+
+[node name="Shape" type="Node2D" parent="Reach"]
+script = ExtResource("2_vjsyv")
+size = Vector2(400, 400)
+fill_color = Color(0.117647, 0.686275, 0.862745, 0.654902)
+metadata/_custom_type_script = "uid://d2xqym5n6hlqn"
+
+[node name="Area" type="Area2D" parent="Reach"]
+
+[node name="Collision" type="CollisionPolygon2D" parent="Reach/Area"]
+
+[node name="Interactive" parent="." instance=ExtResource("2_3dtfm")]
+
+[node name="Spawn" type="Marker2D" parent="."]
+position = Vector2(-8, 27)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_tfsl5")
+
+[node name="Indicator" type="Polygon2D" parent="."]
+position = Vector2(0, -53)
+polygon = PackedVector2Array(0, 0, -10, 10, 0, 20, 10, 10)
+
+[node name="Label" type="Label" parent="."]
+texture_filter = 2
+offset_left = -25.0
+offset_top = -15.0
+offset_right = 25.0
+text = "30"
+label_settings = SubResource("LabelSettings_jst5x")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="body_exited" from="Reach/Area" to="." method="_on_reach_exited"]

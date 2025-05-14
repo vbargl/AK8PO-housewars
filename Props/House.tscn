@@ -1,0 +1,108 @@
+[gd_scene load_steps=9 format=3 uid="uid://dgha8wj66eaxb"]
+
+[ext_resource type="Script" uid="uid://dsxl0psctt0h" path="res://Props/House.gd" id="1_jst5x"]
+[ext_resource type="Texture2D" uid="uid://ck3smpst1yoph" path="res://Assets/House.png" id="1_tfsl5"]
+[ext_resource type="Script" uid="uid://d2xqym5n6hlqn" path="res://addons/2d_shapes/shapes/Ellipse.gd" id="2_vjsyv"]
+
+[sub_resource type="Animation" id="Animation_emr1i"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_3dtfm"]
+resource_name = "blinking"
+length = 7.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.0333333, 2, 3.53333, 5, 7),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(1.1, 1.1), Vector2(1.05, 1.05), Vector2(1.2, 1.2), Vector2(1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_l85my"]
+_data = {
+&"RESET": SubResource("Animation_emr1i"),
+&"blinking": SubResource("Animation_3dtfm")
+}
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3dtfm"]
+size = Vector2(64, 44)
+
+[sub_resource type="LabelSettings" id="LabelSettings_jst5x"]
+font_size = 12
+font_color = Color(0, 0, 0, 1)
+shadow_size = 0
+
+[node name="House" type="Node2D"]
+texture_filter = 1
+script = ExtResource("1_jst5x")
+
+[node name="ReachShape" type="Node2D" parent="."]
+visible = false
+script = ExtResource("2_vjsyv")
+size = Vector2(450, 450)
+fill_color = Color(1, 1, 1, 0.196078)
+metadata/_custom_type_script = "uid://d2xqym5n6hlqn"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_l85my")
+}
+speed_scale = 7.0
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, 2)
+texture = ExtResource("1_tfsl5")
+
+[node name="Reach" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 2
+
+[node name="Collision" type="CollisionPolygon2D" parent="Reach"]
+
+[node name="Interactive" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactive"]
+position = Vector2(0, 2)
+shape = SubResource("RectangleShape2D_3dtfm")
+
+[node name="Indicator" type="Polygon2D" parent="."]
+position = Vector2(0, -53)
+polygon = PackedVector2Array(0, 0, -10, 10, 0, 20, 10, 10)
+
+[node name="Label" type="Label" parent="."]
+texture_filter = 2
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 14.0
+offset_top = -51.0
+offset_right = 85.0
+offset_bottom = -34.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "P100 / M150"
+label_settings = SubResource("LabelSettings_jst5x")
+horizontal_alignment = 1
+vertical_alignment = 1
