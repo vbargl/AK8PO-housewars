@@ -23,6 +23,10 @@ App="*res://App.gd"
 
 mouse_cursor/custom_image="uid://cwqymgw75mi8t"
 
+[editor]
+
+version_control/autoload_on_startup=true
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/2d_shapes/plugin.cfg")

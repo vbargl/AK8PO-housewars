@@ -159,7 +159,7 @@ func _do_build(pos: Vector2):
 	var house = House.instantiate() as House
 	$Houses.add_child(house)
 	house.position = pos
-	house.acquire(_house.player, App.BUILD_POPULATION_REQUIREMENT+100, App.BUILD_MONEY_REQUIREMENT+100)
+	house.acquire(_house.player, App.BUILD_POPULATION_REQUIREMENT, App.BUILD_MONEY_REQUIREMENT)
 	_house.population -= App.BUILD_POPULATION_REQUIREMENT
 	_house.money -= App.BUILD_MONEY_REQUIREMENT
 	_executed()
