@@ -226,5 +226,6 @@ offset_bottom = 317.0
 stream = ExtResource("16_6w02q")
 volume_db = -20.0
 autoplay = true
+parameters/looping = true
 
 [connection signal="ready" from="." to="." method="_on_ready"]

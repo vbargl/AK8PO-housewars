@@ -13,7 +13,8 @@ config_version=5
 config/name="HouseWars"
 run/main_scene="uid://bj1yfq7c7odbh"
 config/features=PackedStringArray("4.4", "Forward Plus")
-config/icon="res://icon.svg"
+config/icon="uid://cp8f16x1dne4y"
+config/windows_native_icon="res://Assets/Icons/icon.ico"
 
 [autoload]
 
@@ -21,6 +22,7 @@ App="*res://App.gd"
 
 [display]
 
+window/size/resizable=false
 mouse_cursor/custom_image="uid://cwqymgw75mi8t"
 
 [editor]
@@ -77,3 +79,7 @@ cancel={
 [layer_names]
 
 2d_physics/layer_2="Props"
+
+[rendering]
+
+textures/vram_compression/import_etc2_astc=true
